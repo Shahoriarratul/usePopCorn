@@ -1,27 +1,34 @@
-import { useEffect, useState } from "react";
-const Key = "c12af50a";
+import { useState, useEffect } from "react";
 
-export function useMovies(query, callBack) {
+const KEY = "c12af50a";
+
+export function useMovies(query) {
   const [movies, setMovies] = useState([]);
-  const [isLoding, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
   useEffect(
     function () {
-      callBack?.();
+      // callback?.();
+
       const controller = new AbortController();
+
       async function fetchMovies() {
         try {
-          setError("");
           setIsLoading(true);
+          setError("");
+
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${Key}&s=${query}`,
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
             { signal: controller.signal }
           );
-          if (!res.ok) throw new Error("Something went wrong in fetching");
+
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching movies");
+
           const data = await res.json();
-          if (data.Response === "False") {
-            throw new Error("No movies found");
-          }
+          if (data.Response === "False") throw new Error("Movie not found");
+
           setMovies(data.Search);
           setError("");
         } catch (err) {
@@ -33,18 +40,21 @@ export function useMovies(query, callBack) {
           setIsLoading(false);
         }
       }
+
       if (query.length < 3) {
-        setError("");
         setMovies([]);
+        setError("");
         return;
       }
 
       fetchMovies();
+
       return function () {
         controller.abort();
       };
     },
     [query]
   );
-  return { movies, isLoding, error };
+
+  return { movies, isLoading, error };
 }
