@@ -16,13 +16,7 @@ export default function App() {
 
   const [watched, setWatched] = useLocalStorageState([], "watched");
 
-<<<<<<< .mine
   function handleSelectMovie(id) {
-
-=======
-
-  function handleSelecteMovie(id) {
->>>>>>> .theirs
     setSelectedId((selectedId) => (id === selectedId ? null : id));
   }
 
