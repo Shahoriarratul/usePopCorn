@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-const Key = "4c644847";
+const Key = "c12af50a";
 
 export function useMovies(query, callBack) {
   const [movies, setMovies] = useState([]);
