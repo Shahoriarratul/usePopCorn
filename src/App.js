@@ -1,18 +1,28 @@
+"use client";
+
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
 import { useKey } from "./useKey";
+import { getMovieDetails as fetchMovieDetails } from "./tmdb";
 
 const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
-const Key = "4c644847";
+  arr.length ? arr.reduce((acc, cur) => acc + cur / arr.length, 0) : 0;
 export default function App() {
   const [query, setQuery] = useState("");
 
   const [selectedId, setSelectedId] = useState(null);
-  const { movies, isLoding, error } = useMovies(query, handleCloseSelected);
+  const { movies, isLoding, error } = useMovies(query);
   const [watched, setWatched] = useLocalStorageState([], "watched");
+
+  useEffect(
+    function () {
+      setSelectedId(null);
+    },
+    [query]
+  );
 
   // const [watched, setWatched] = useState(function () {
   //   const storedvalue = localStorage.getItem("watched");
@@ -31,14 +41,9 @@ export default function App() {
   function handleDeleteMovie(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
+
   return (
-    <>
+    <div className="app-frame mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
       <NavBar>
         <Search query={query} setQuery={setQuery} />
 
@@ -71,7 +76,7 @@ export default function App() {
           )}
         </Box>
       </Main>
-    </>
+    </div>
   );
 }
 function Loader() {
@@ -82,7 +87,7 @@ function ErrorMessage({ message }) {
 }
 function NavBar({ children }) {
   return (
-    <nav className="nav-bar">
+    <nav className="nav-bar nav-bar-compact">
       <Logo />
       {children}
     </nav>
@@ -92,7 +97,9 @@ function Logo() {
   return (
     <div className="logo">
       <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
+      <h1>
+        <Link href="/">popcorn</Link>
+      </h1>
     </div>
   );
 }
@@ -125,7 +132,7 @@ function Search({ query, setQuery }) {
   );
 }
 function Main({ children }) {
-  return <main className="main">{children}</main>;
+  return <main className="main main-active">{children}</main>;
 }
 function Box({ children }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -199,16 +206,30 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatch, watched }) {
 
   useEffect(
     function () {
-      async function getMovieDetails() {
-        setIsLoading(true);
-        const res = await fetch(
-          `https://www.omdbapi.com/?apikey=${Key}&i=${selectedId}`
-        );
-        const data = await res.json();
-        setMovie(data);
-        setIsLoading(false);
+      const controller = new AbortController();
+
+      async function loadMovieDetails() {
+        try {
+          setIsLoading(true);
+          const data = await fetchMovieDetails(
+            selectedId,
+            controller.signal
+          );
+          setMovie(data);
+        } catch (error) {
+          if (error.name !== "AbortError") {
+            console.log(error.message);
+          }
+        } finally {
+          if (!controller.signal.aborted) setIsLoading(false);
+        }
       }
-      getMovieDetails();
+
+      loadMovieDetails();
+
+      return function () {
+        controller.abort();
+      };
     },
     [selectedId]
   );
@@ -218,7 +239,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatch, watched }) {
       document.title = `Movie | ${title}`;
 
       return function () {
-        document.title = "usePopCorn";
+        document.title = "popcorn";
       };
     },
     [title]
@@ -233,7 +254,13 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatch, watched }) {
             <button className="btn-back" onClick={() => onCloseMovie()}>
               &larr;
             </button>
-            <img src={poster} alt={`Poster of ${movie} movie`} />
+            <img
+              src={poster}
+              alt={`Poster of ${title || "movie"}`}
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
             <div className="details-overview">
               <h2>{title}</h2>
               <p>
@@ -313,7 +340,7 @@ function WachedSummery({ watched }) {
         </p>
         <p>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(1)}</span>
         </p>
         <p>
           <span>⏳</span>

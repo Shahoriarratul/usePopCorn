@@ -1,14 +1,31 @@
 import { useEffect, useState } from "react";
-export function useLocalStorageState(initialSate, key) {
-  const [value, setValue] = useState(function () {
-    const storeValue = localStorage.getItem(key);
-    return storeValue ? JSON.parse(storeValue) : initialSate;
-  });
+export function useLocalStorageState(initialState, key) {
+  const [value, setValue] = useState(initialState);
+  const [isHydrated, setIsHydrated] = useState(false);
+
   useEffect(
     function () {
-      localStorage.setItem("watched", JSON.stringify(value));
+      if (typeof window === "undefined") return;
+
+      try {
+        const storedValue = window.localStorage.getItem(key);
+        if (storedValue) setValue(JSON.parse(storedValue));
+      } catch {
+        // Ignore malformed localStorage data and keep the initial value.
+      } finally {
+        setIsHydrated(true);
+      }
     },
-    [value, key]
+    [key]
   );
+
+  useEffect(
+    function () {
+      if (!isHydrated || typeof window === "undefined") return;
+      window.localStorage.setItem(key, JSON.stringify(value));
+    },
+    [value, key, isHydrated]
+  );
+
   return [value, setValue];
 }

@@ -1,0 +1,371 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --bg-1: #070a0f;
+    --bg-2: #111c2c;
+    --glass: rgba(255, 255, 255, 0.08);
+  }
+
+  html {
+    @apply antialiased;
+    font-size: 62.5%;
+  }
+
+  body {
+    @apply min-h-screen text-slate-100;
+    font-family: "Outfit", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 18% 20%, rgba(255, 107, 129, 0.18), transparent 35%),
+      radial-gradient(circle at 82% 12%, rgba(78, 205, 196, 0.18), transparent 36%),
+      radial-gradient(circle at 50% 84%, rgba(0, 179, 255, 0.16), transparent 34%),
+      linear-gradient(165deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    background-attachment: fixed;
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  img {
+    @apply block max-w-full;
+  }
+}
+
+@layer components {
+  .nav-bar {
+    @apply sticky top-4 z-30 grid h-28 items-center gap-6 rounded-3xl border border-white/20 px-8 shadow-panel;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), var(--glass));
+    backdrop-filter: blur(16px);
+    transition: transform 320ms ease, background-color 320ms ease;
+    grid-template-columns: 1fr minmax(0, 1.7fr) auto;
+  }
+
+  .nav-bar-compact {
+    transform: translateY(0);
+  }
+
+  .view-hero .nav-bar {
+    transform: translateY(18px);
+  }
+
+  .app-frame {
+    position: relative;
+    padding-bottom: 5rem;
+  }
+
+  .landing-shell {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    padding: 0;
+  }
+
+  .home-hero {
+    @apply relative grid place-items-center overflow-hidden border border-white/15;
+    min-height: 100vh;
+    width: 100%;
+    border-radius: 0;
+    margin: 0;
+    background: linear-gradient(120deg, rgba(7, 10, 15, 0.82), rgba(17, 28, 44, 0.72));
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+    transition: min-height 420ms ease, border-radius 420ms ease, transform 420ms ease,
+      opacity 420ms ease;
+  }
+
+  .home-hero::before,
+  .home-hero::after {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .home-hero::before {
+    background: radial-gradient(circle at 20% 20%, rgba(255, 90, 129, 0.22), transparent 38%),
+      radial-gradient(circle at 78% 32%, rgba(0, 209, 255, 0.2), transparent 42%);
+    animation: hero-shift 18s ease-in-out infinite alternate;
+  }
+
+  .home-hero::after {
+    background: radial-gradient(circle at 60% 70%, rgba(255, 210, 100, 0.15), transparent 36%);
+    mix-blend-mode: screen;
+    animation: hero-shift 22s ease-in-out infinite alternate-reverse;
+  }
+
+  .home-hero-compact {
+    min-height: 34rem;
+    border-radius: 2.2rem;
+    transform: scale(0.985);
+  }
+
+  .landing-cta {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-backdrop {
+    @apply absolute inset-0 grid grid-cols-2 gap-2 p-4 opacity-45 sm:grid-cols-3 md:grid-cols-6;
+    mask-image: linear-gradient(to top, transparent 0%, black 18%, black 84%, transparent 100%);
+    z-index: 0;
+  }
+
+  .hero-poster {
+    @apply h-full w-full rounded-2xl object-cover;
+    transform: translateY(10px) scale(1.02);
+    animation: poster-rise 900ms ease forwards, poster-drift 8s ease-in-out infinite alternate;
+  }
+
+  .hero-content {
+    @apply relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-5 rounded-3xl border border-white/20 px-6 py-12 text-center sm:px-10 sm:py-16;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(14px);
+  }
+
+  .hero-eyebrow {
+    @apply rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-50;
+    font-family: "Space Grotesk", "Outfit", sans-serif;
+  }
+
+  .hero-content h2 {
+    @apply text-5xl font-black leading-tight text-white sm:text-7xl;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-content p {
+    @apply max-w-2xl text-lg text-slate-200;
+  }
+
+  .hero-actions {
+    @apply mt-2 flex flex-wrap items-center justify-center gap-3;
+  }
+
+  .hero-search-btn {
+    @apply rounded-full border border-white/25 px-9 py-4 text-2xl font-extrabold tracking-wide text-white shadow-2xl transition;
+    background: linear-gradient(135deg, #ff4d6d, #ff7a5a 45%, #ffd166);
+    font-family: "Space Grotesk", "Outfit", sans-serif;
+  }
+
+  .hero-search-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 22px 42px rgba(255, 122, 90, 0.45);
+  }
+
+  .hero-chip {
+    @apply rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-slate-100 transition;
+  }
+
+  .hero-chip:hover {
+    @apply bg-white/20;
+    transform: translateY(-1px);
+  }
+
+  .main {
+    @apply mt-6 flex flex-col gap-6 xl:flex-row;
+    transition: opacity 420ms ease, transform 420ms ease, max-height 420ms ease;
+  }
+
+  .main-idle {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    pointer-events: none;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+  }
+
+  .main-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    max-height: 220rem;
+    min-height: calc(100vh - 13rem);
+  }
+
+  .box {
+    @apply relative w-full overflow-hidden rounded-3xl border border-white/15 shadow-panel xl:max-w-[42rem];
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(14px);
+  }
+
+  .loader,
+  .error {
+    @apply px-8 py-16 text-center text-2xl font-semibold uppercase tracking-[0.2em];
+  }
+
+  .error {
+    @apply text-red-300;
+  }
+
+  .logo {
+    @apply flex items-center gap-3;
+  }
+
+  .logo span {
+    @apply text-4xl;
+  }
+
+  .logo h1 {
+    @apply text-3xl font-semibold text-white;
+  }
+
+  .search {
+    @apply w-full justify-self-stretch rounded-2xl border border-white/15 bg-brand-400 px-6 py-4 text-xl text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 xl:w-[40rem] xl:justify-self-center;
+  }
+
+  .num-results {
+    @apply justify-self-end text-xl text-white/90;
+  }
+
+  .btn-toggle {
+    @apply absolute right-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-ink-950/90 text-lg font-bold text-slate-100 transition hover:bg-ink-800;
+  }
+
+  .list {
+    @apply max-h-[70vh] list-none overflow-y-auto py-3;
+  }
+
+  .list li {
+    @apply relative grid grid-cols-[4rem_1fr] items-center gap-x-6 border-b border-white/5 px-8 py-5 text-base;
+  }
+
+  .list.list-movies li {
+    @apply cursor-pointer transition hover:bg-white/5;
+  }
+
+  .list img {
+    @apply row-span-2 w-full rounded-lg object-cover;
+  }
+
+  .list h3 {
+    @apply text-lg font-semibold text-slate-100;
+  }
+
+  .list div {
+    @apply flex items-center gap-6 text-slate-300;
+  }
+
+  .list p {
+    @apply flex items-center gap-2;
+  }
+
+  .btn-delete {
+    @apply absolute right-6 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-red-500 text-xs font-bold text-white transition hover:bg-red-600;
+  }
+
+  .summary {
+    @apply rounded-t-3xl border-b border-white/10 bg-black/20 px-8 py-7 shadow-lg;
+  }
+
+  .summary h2 {
+    @apply mb-2 text-sm font-bold uppercase tracking-[0.22em] text-slate-300;
+  }
+
+  .summary div {
+    @apply flex flex-wrap items-center gap-5 text-sm font-semibold text-slate-100;
+  }
+
+  .summary p {
+    @apply flex items-center gap-2;
+  }
+
+  .details {
+    @apply text-sm leading-6 text-slate-200;
+  }
+
+  .details header {
+    @apply flex flex-col gap-4 border-b border-white/5 p-6 sm:flex-row sm:items-start;
+  }
+
+  .details section {
+    @apply flex flex-col gap-4 p-6;
+  }
+
+  .details img {
+    @apply w-full rounded-2xl sm:w-44;
+  }
+
+  .details-overview {
+    @apply flex-1 space-y-2;
+  }
+
+  .details-overview h2 {
+    @apply text-3xl font-bold text-white;
+  }
+
+  .details-overview p {
+    @apply text-slate-300;
+  }
+
+  .btn-back,
+  .btn-add {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 font-semibold transition;
+  }
+
+  .btn-back {
+    @apply h-10 w-10 shrink-0 rounded-full border border-white/10 bg-white/5 text-lg text-white hover:bg-white/10;
+  }
+
+  .btn-add {
+    @apply w-fit bg-brand-500 text-white hover:bg-brand-400;
+  }
+
+  .rating {
+    @apply rounded-2xl bg-white/10 p-5;
+  }
+}
+
+@keyframes poster-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(1.06);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1.02);
+  }
+}
+
+@keyframes poster-drift {
+  from {
+    transform: translateY(0) scale(1.02);
+  }
+
+  to {
+    transform: translateY(-10px) scale(1.04);
+  }
+}
+
+@keyframes hero-shift {
+  from {
+    transform: translate3d(-1.5%, -1%, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(1.5%, 1%, 0) scale(1.05);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    min-height: 100dvh;
+  }
+
+  .home-hero-compact {
+    min-height: 38rem;
+  }
+
+  .hero-content h2 {
+    font-size: 4.2rem;
+  }
+}

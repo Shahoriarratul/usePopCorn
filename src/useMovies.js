@@ -1,38 +1,31 @@
 import { useEffect, useState } from "react";
-const Key = "4c644847";
+import { searchMovies } from "./tmdb";
 
-export function useMovies(query, callBack) {
+export function useMovies(query) {
   const [movies, setMovies] = useState([]);
   const [isLoding, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   useEffect(
     function () {
-      callBack?.();
       const controller = new AbortController();
+
       async function fetchMovies() {
         try {
           setError("");
           setIsLoading(true);
-          const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${Key}&s=${query}`,
-            { signal: controller.signal }
-          );
-          if (!res.ok) throw new Error("Something went wrong in fetching");
-          const data = await res.json();
-          if (data.Response === "False") {
-            throw new Error("No movies found");
-          }
-          setMovies(data.Search);
-          setError("");
+          const movieResults = await searchMovies(query, controller.signal);
+          setMovies(movieResults);
         } catch (err) {
           if (err.name !== "AbortError") {
             console.log(err.message);
             setError(err.message);
+            setMovies([]);
           }
         } finally {
           setIsLoading(false);
         }
       }
+
       if (query.length < 3) {
         setError("");
         setMovies([]);
