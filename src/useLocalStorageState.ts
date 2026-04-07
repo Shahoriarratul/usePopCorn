@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-export function useLocalStorageState(initialState, key) {
-  const [value, setValue] = useState(initialState);
+
+export function useLocalStorageState<T>(initialState: T, key: string) {
+  const [value, setValue] = useState<T>(initialState);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(
@@ -9,7 +10,7 @@ export function useLocalStorageState(initialState, key) {
 
       try {
         const storedValue = window.localStorage.getItem(key);
-        if (storedValue) setValue(JSON.parse(storedValue));
+        if (storedValue) setValue(JSON.parse(storedValue) as T);
       } catch {
         // Ignore malformed localStorage data and keep the initial value.
       } finally {
@@ -27,5 +28,5 @@ export function useLocalStorageState(initialState, key) {
     [value, key, isHydrated]
   );
 
-  return [value, setValue];
+  return [value, setValue] as const;
 }

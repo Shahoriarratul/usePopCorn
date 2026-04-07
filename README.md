@@ -54,13 +54,13 @@ This project uses **TMDB v3**.
 - Search: `GET /search/movie`
 - Details: `GET /movie/{id}?append_to_response=credits`
 
-The API layer is implemented in `src/tmdb.js`.
+The API layer is implemented in `src/tmdb.ts`.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24.x
 - npm 9+
 
 ### Installation
@@ -118,31 +118,31 @@ NEXT_PUBLIC_TMDB_READ_ACCESS_TOKEN=your_tmdb_read_access_token
 |   |-- manifest.json
 |   `-- robots.txt
 `-- src/
-    |-- App.js
-    |-- StarRating.js
+    |-- App.tsx
+    |-- StarRating.tsx
     |-- index.css
-    |-- index.js
-    |-- tmdb.js
-    |-- useKey.js
-    |-- useLocalStorageState.js
-    |-- useMovies.js
+    |-- index.tsx
+    |-- tmdb.ts
+    |-- useKey.ts
+    |-- useLocalStorageState.ts
+    |-- useMovies.ts
     `-- app/
         |-- globals.css
-        |-- layout.js
-        |-- page.js
+        |-- layout.tsx
+        |-- page.tsx
         `-- search/
-            `-- page.js
+            `-- page.tsx
 ```
 
 ## Core Files
 
-- `src/app/page.js` - Hero landing page (`/`)
-- `src/app/search/page.js` - Search page route (`/search`)
-- `src/App.js` - Main search + details + watched-list UI
-- `src/tmdb.js` - TMDB fetch and response mapping
-- `src/useMovies.js` - Query-based movie search hook
-- `src/useLocalStorageState.js` - Persist watched list in local storage
-- `src/StarRating.js` - Interactive star rating component
+- `src/app/page.tsx` - Hero landing page (`/`)
+- `src/app/search/page.tsx` - Search page route (`/search`)
+- `src/App.tsx` - Main search + details + watched-list UI
+- `src/tmdb.ts` - TMDB fetch and response mapping
+- `src/useMovies.ts` - Query-based movie search hook
+- `src/useLocalStorageState.ts` - Persist watched list in local storage
+- `src/StarRating.tsx` - Interactive star rating component
 - `src/app/globals.css` - Theme, layout, and responsive styles
 
 ## Troubleshooting

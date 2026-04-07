@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { searchMovies } from "./tmdb";
+import { searchMovies, SearchMovie } from "./tmdb";
 
-export function useMovies(query) {
-  const [movies, setMovies] = useState([]);
+export function useMovies(query: string) {
+  const [movies, setMovies] = useState<SearchMovie[]>([]);
   const [isLoding, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
   useEffect(
     function () {
       const controller = new AbortController();
@@ -15,10 +16,11 @@ export function useMovies(query) {
           setIsLoading(true);
           const movieResults = await searchMovies(query, controller.signal);
           setMovies(movieResults);
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            console.log(err.message);
-            setError(err.message);
+        } catch (err: unknown) {
+          if (!(err instanceof DOMException && err.name === "AbortError")) {
+            const message = err instanceof Error ? err.message : String(err);
+            console.log(message);
+            setError(message);
             setMovies([]);
           }
         } finally {

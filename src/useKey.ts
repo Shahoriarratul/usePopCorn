@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-export function useKey(key, action) {
+
+export function useKey(key: string, action: () => void) {
   useEffect(
     function () {
-      function callBack(e) {
+      function callBack(e: KeyboardEvent) {
         if (e.code.toLowerCase() === key.toLowerCase()) {
           action();
         }
