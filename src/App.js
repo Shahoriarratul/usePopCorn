@@ -43,7 +43,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-frame mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+    <div className="app-frame app-screen mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <NavBar>
         <Search query={query} setQuery={setQuery} />
 

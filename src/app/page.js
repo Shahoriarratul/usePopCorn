@@ -26,7 +26,6 @@ export default function HomePage() {
         </div>
 
         <div className="hero-content">
-          <p className="hero-eyebrow">Movie Night Starts Here</p>
           <h2>Welcome to popcorn</h2>
           <p>
             Start from this cinematic home page, then jump into a dedicated
@@ -34,7 +33,7 @@ export default function HomePage() {
           </p>
           <div className="hero-actions">
             <Link href="/search" className="hero-search-btn landing-cta">
-              Enter Search and Rating
+              Search and Rate
             </Link>
             <Link href="/search" className="hero-chip">
               Explore Movies
